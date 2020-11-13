@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-import os, sqlite3, subprocess, xattr, pickle
+import os, sqlite3, subprocess, xattr, pickle, platform
 
 cwd = os.path.abspath(os.path.curdir)
 conn = sqlite3.connect('clonefile-index.sqlite')
 
 with conn:
     
-	cur = conn.cursor()    
+	pf = platform.system()
+	if pf != 'Darwin':
+		cp_cmd = ['cp', '-cvp']
+	elif pf != "Linux":
+		cp_cmd = ['cp', '-vp', '--reflink']
+	else:
+		exit(1)
+	cur = conn.cursor()
     
     # Get files with duplicates
 	cur.execute("SELECT chksumfull, COUNT(*) c FROM files WHERE chksumfull != '' GROUP BY chksumfull HAVING c > 1 ORDER BY size DESC")
@@ -38,7 +45,7 @@ with conn:
 				oldDirStat = os.stat(dirName)
 
 				# The -c parameter is for the `clonefile`
-				copyCommand = subprocess.run(['cp', '-cvp', originalFile, fnameNew], stdout=subprocess.PIPE)
+				copyCommand = subprocess.run(cp_cmd + [originalFile, fnameNew], stdout=subprocess.PIPE)
 				#print(copyCommand)
 
 				newStat = os.stat(fnameNew) 
