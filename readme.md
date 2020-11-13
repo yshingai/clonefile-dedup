@@ -10,6 +10,7 @@ You'll need:
  - python 3.6
  - python sqlite3, tqdm and xattr modules
  - a Mac with APFS (to utilize the clonefile syscall)
+ - or Linux xfs (reflink support) 
 
 This program could easily be combined into one program, but it's not a lot of work to run this as separate scripts, so I will leave it as is. 
 
