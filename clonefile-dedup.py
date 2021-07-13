@@ -7,9 +7,9 @@ conn = sqlite3.connect('clonefile-index.sqlite')
 with conn:
     
 	pf = platform.system()
-	if pf != 'Darwin':
+	if pf == 'Darwin':
 		cp_cmd = ['cp', '-cvp']
-	elif pf != "Linux":
+	elif pf == "Linux":
 		cp_cmd = ['cp', '-vp', '--reflink']
 	else:
 		exit(1)

@@ -10,9 +10,9 @@ with conn:
 	cur.execute("SELECT chksumfull, COUNT(*) c FROM files WHERE chksumfull != '' GROUP BY chksumfull HAVING c > 1")
 	results = cur.fetchall()
 	pf = platform.system()
-	if pf != 'Darwin':
+	if pf == 'Darwin':
 		sha_cmd = ['shasum', '-a', '256']
-	elif pf != "Linux":
+	elif pf == "Linux":
 		sha_cmd = ['sha256sum']
 	else:
 		exit(1)
