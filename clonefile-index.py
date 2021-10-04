@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+import ntpath
 import os, sqlite3, hashlib, json
+import sys
 from tqdm import tqdm
 from os import listdir
-from os.path import isfile, islink, join
+from os.path import isfile, islink, join, isdir
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -71,13 +73,29 @@ def add2sqlite(fileinfo):
 if __name__ == '__main__':
 	allfiles = []
 	sqlite_data = []
-	print(f"Indexing files in {os.getcwd()}")
-	print(f"Reading file list")
-	for dirpath, dirnames, filenames in os.walk("."):
-		for filename in [f for f in filenames]:
-			filelink = os.path.abspath(os.path.join(dirpath, filename))
-			if isfile(filelink) and not islink(filelink):
-				allfiles.append(filelink)
+	# print(f"Indexing files in {os.getcwd()}")
+	# print(f"Reading file list")
+	# for dirpath, dirnames, filenames in os.walk("."):
+	# 	for filename in [f for f in filenames]:
+	# 		filelink = os.path.abspath(os.path.join(dirpath, filename))
+	# 		if isfile(filelink) and not islink(filelink):
+	# 			allfiles.append(filelink)
+	args = sys.argv
+	dirs = []
+	for d in args:
+		p = ntpath.expanduser(d)
+		if isdir(p):
+			dirs.append(p)
+	if(len(dirs) == 0):
+		dirs.append(".")
+	for d in dirs:
+		print(f"Indexing files in {d}")
+		print(f"Reading file list")
+		for dirpath, dirnames, filenames in os.walk(d):
+			for filename in [f for f in filenames]:
+				filelink = os.path.abspath(os.path.join(dirpath, filename))
+				if isfile(filelink) and not islink(filelink):
+					allfiles.append(filelink)
 	num_of_files = len(allfiles)
 	# "threads" at a time, multiprocess delegation
 	print(f'Checksumming {num_of_files} files (fast)')
