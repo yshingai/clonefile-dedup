@@ -9,5 +9,10 @@ xattr = "*"
 
 [dev-packages]
 
+[script]
+index = "python clonefile-index.py"
+verify = "python clonefile-verify.py"
+dedup = "python clonefile-dedup.py"
+
 [requires]
 python_version = "3.7"
