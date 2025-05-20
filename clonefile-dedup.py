@@ -10,7 +10,7 @@ with conn:
 	if pf == 'Darwin':
 		cp_cmd = ['cp', '-cvp']
 	elif pf == "Linux":
-		cp_cmd = ['cp', '-vp', '--reflink']
+		cp_cmd = ['cp', '-vp', '--reflink', '--preserve=mode,ownership,timestamps']
 	else:
 		exit(1)
 	cur = conn.cursor()

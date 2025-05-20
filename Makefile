@@ -12,6 +12,10 @@ install:
 	#poetry run install
 
 
+poetry:
+	poetry config virtualenvs.in-project true
+	poetry update
+
 index:
 	read -p "index: $(DIR) ?" y
 	rm -i clonefile-index.sqlite
