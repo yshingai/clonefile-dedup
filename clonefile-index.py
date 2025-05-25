@@ -59,14 +59,17 @@ def getSHA256(currentFile, full=False):
 def add2sqlite(fileinfo):
 	for f in fileinfo:
 		if (f != None):
-			if f[2]>BLOCKSIZE:
-				c.execute(
-					"INSERT INTO files (file, chksum64k, chksumfull, size, stat) VALUES (?,?,?,?,?)",
-					(f[0], f[1], '',   f[2], f[3]) )
-			else:
-				c.execute(
-					"INSERT INTO files (file, chksum64k, chksumfull, size, stat) VALUES (?,?,?,?,?)",
-					(f[0], f[1], f[1], f[2], f[3]) )
+			try:
+				if f[2]>BLOCKSIZE:
+					c.execute(
+						"INSERT INTO files (file, chksum64k, chksumfull, size, stat) VALUES (?,?,?,?,?)",
+						(f[0], f[1], '',   f[2], f[3]) )
+				else:
+					c.execute(
+						"INSERT INTO files (file, chksum64k, chksumfull, size, stat) VALUES (?,?,?,?,?)",
+						(f[0], f[1], f[1], f[2], f[3]) )
+			except Exception as e:
+				print(f"Couldn\'t add {f[0].encode('utf-8', 'replace').decode('utf-8')} to database: {e}")
 
 # Index all files from within the root
 #start script

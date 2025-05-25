@@ -13,18 +13,19 @@ install:
 
 
 poetry:
+	pyenv local 3.7.17
 	poetry config virtualenvs.in-project true
 	poetry update
 
 index:
 	read -p "index: $(DIR) ?" y
-	rm -i clonefile-index.sqlite
-	poetry run python clonefile-index.py $(DIR)
+	rm -f clonefile-index.sqlite
+	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-index.py $(DIR) 2>&1 | tee index.log
 
 verify:
-	poetry run python clonefile-verify.py
+	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-verify.py 2>&1 | tee verify.log
 
 dedup:
-	poetry run python clonefile-dedup.py
+	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-dedup.py 2>&1 | tee dedup.log
 
 
