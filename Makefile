@@ -8,6 +8,7 @@ shell:
 install:
 	case $$OSTYPE ;	\
 		linux-gnu) \
+			pyenv local 3.7.17 \
 			;; \
 		darwin*) \
 			sudo port install python37 poetry \
@@ -41,12 +42,12 @@ poetry:
 index:
 	read -p "index: $(DIR) ?" y
 	rm -f clonefile-index.sqlite
-	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-index.py $(DIR) 2>&1 | tee index.log
+	LC_ALL=ja_JP.UTF-8 time poetry run python clonefile-index.py $(DIR) 2>&1 | tee index.log
 
 verify:
-	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-verify.py 2>&1 | tee verify.log
+	LC_ALL=ja_JP.UTF-8 time poetry run python clonefile-verify.py 2>&1 | tee verify.log
 
 dedup:
-	LC_ALL=ja_JP.UTF-8 poetry run python clonefile-dedup.py 2>&1 | tee dedup.log
+	LC_ALL=ja_JP.UTF-8 time poetry run python clonefile-dedup.py 2>&1 | tee dedup.log
 
 
