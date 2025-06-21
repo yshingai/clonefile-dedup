@@ -6,14 +6,35 @@ all:
 shell:
 
 install:
-	sudo port install python37 poetry
-	sudo port select --set virtualenv virtualenv313
-	sudo port select --set python3 python313
+	case $$OSTYPE ;	\
+		linux-gnu) \
+			;; \
+		darwin*) \
+			sudo port install python37 poetry \
+			sudo port select --set virtualenv virtualenv313 \
+			sudo port select --set python3 python313 \
+			;; \
+		*) \
+			;; \
+	esac
 	#poetry run install
 
 
+pyenv:
+	type -p pyenv ; if [ $$? -ne 0 ]; then \
+		curl -fsSL https://pyenv.run | bash ; \
+	fi; \
+
 poetry:
-	pyenv local 3.7.17
+	type -p poetry ; if [ $$? -ne 0 ]; then \
+		curl -sSL https://install.python-poetry.org | python3 -; \
+	fi;
+	case $$OSTYPE in \
+		linux-gnu) \
+			pyenv install 3.7.17; \
+			pyenv local 3.7.17; \
+			;; \
+	esac
 	poetry config virtualenvs.in-project true
 	poetry update
 
